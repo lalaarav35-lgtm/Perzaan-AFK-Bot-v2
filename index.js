@@ -11,7 +11,6 @@ http.createServer((req, res) => { res.write("Bot is running!"); res.end(); }).li
 
   req.write(payload);
   req.end();
-}
 
 // ============================================================
 // CRASH RECOVERY - IMMORTAL MODE
