@@ -1,92 +1,73 @@
-{
-  "name": "AFK Bot",
-  "bot-account": {
-    "username": "PerzaanLive",
-    "password": "",
-    "type": "offline"
-  },
-  "server": {
-    "ip": "Aarav1hgc.aternos.me
-",
-    "port": 12216,
-    "version": "1.21.1"
-  },
-  "position": {
-    "enabled": true,
-    "x": 0,
-    "y": 100,
-    "z": 0
-  },
-  "utils": {
-    "auto-auth": {
-      "enabled": true,
-      "password": "Perzuu"
-    },
-    "anti-afk": {
-      "enabled": true,
-      "sneak": true
-    },
-    "chat-messages": {
-      "enabled": true,
-      "repeat": true,
-      "repeat-delay": 500,
-      "messages": [
-        "I'm a regular player",
-        "Subscribe to Perzaan Gaming!",
-        "I like to play Minecraft!"
-      ]
-    },
-    "chat-log": true,
-    "auto-reconnect": true,
-    "auto-reconnect-delay": 2000,
-    "max-reconnect-delay": 20000,
-    "periodic-rejoin": {
-      "enabled": false,
-      "min-interval": 20,
-      "max-interval": 60
-    }
-  },
-  "movement": {
-    "enabled": true,
-    "circle-walk": {
-      "enabled": true,
-      "radius": 4,
-      "speed": 3000
-    },
-    "look-around": {
-      "enabled": true,
-      "interval": 5000
-    },
-    "random-jump": {
-      "enabled": true,
-      "interval": 10000
-    }
-  },
-  "modules": {
-    "avoidMobs": true,
-    "combat": true,
-    "beds": true,
-    "chat": true,
-    "console-commands": true
-  },
-  "combat": {
-    "attack-mobs": true,
-    "auto-eat": true
-  },
-  "beds": {
-    "pick-up-day": true,
-    "place-night": true
-  },
-  "discord": {
-    "enabled": true,
-    "webhookUrl": "https://discord.com/api/webhooks/1472567640521183243/7DzSIaCSM_9-5DjzrlAuP9Tdj7Y3yAP6BHg3scKzhaRFdVk8ctWBlhOc7I8l5xC6Nqm3",
-    "events": {
-      "connect": true,
-      "disconnect": true,
-      "chat": false
-    }
-  },
-  "chat": {
-    "respond": true
-  }
+const http = require('http');
+const mineflayer = require('mineflayer');
+const fs = require('fs');
+
+// 1. Keep Render Free Tier alive with a health-check HTTP server
+http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.write("Bot is running!");
+  res.end();
+}).listen(process.env.PORT || 3000);
+
+// 2. Load settings.json
+let settings = {};
+try {
+  const rawData = fs.readFileSync('./settings.json');
+  settings = JSON.parse(rawData);
+} catch (e) {
+  console.log("Error reading settings.json: " + e.message);
 }
+
+// 3. Function to start the Minecraft bot
+function createBot() {
+  const serverConfig = settings.server || {
+    host: "Aarav1hgc.aternos.me",
+    port: 25565,
+    username: "PerzaanAFK",
+    version: false
+  };
+
+  console.log(`Attempting to connect to ${serverConfig.host}:${serverConfig.port} as ${serverConfig.username}...`);
+
+  const bot = mineflayer.createBot({
+    host: serverConfig.host,
+    port: serverConfig.port || 25565,
+    username: serverConfig.username || "PerzaanAFK",
+    version: serverConfig.version || false
+  });
+
+  bot.on('spawn', () => {
+    console.log("Bot has successfully spawned into the server!");
+  });
+
+  bot.on('error', (err) => {
+    console.log("Bot error: ", err);
+  });
+
+  bot.on('end', () => {
+    console.log("Bot disconnected. Reconnecting in 5 seconds...");
+    setTimeout(() => {
+      createBot();
+    }, 5000);
+  });
+}
+
+// ===================================================
+// CRASH RECOVERY
+// ===================================================
+process.on('uncaughtException', (err) => {
+  console.log(`[FATAL] Uncaught Exception: ${err.message}`);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.log(`[FATAL] Unhandled Rejection: ${reason}`);
+});
+
+// ===================================================
+// START THE BOT
+// ===================================================
+console.log('='.repeat(50));
+console.log('  Minecraft AFK Bot v2 - Running on Render  ');
+console.log('='.repeat(50));
+
+createBot();
