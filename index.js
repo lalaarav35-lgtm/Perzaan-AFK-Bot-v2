@@ -1,7 +1,7 @@
 const http = require('http');
-http.createServer((req, res) => { res.write("Bot is running!"); res.end(); }).listen(process.env.PORT || 3000);
+const protocol = require('https');
 
-  const req = protocol.request(options, (res) => {
+http.createServer((req, res) => { res.write("Bot is running!"); res.end(); }).listen(process.env.PORT || 3000);
     // console.log(`[Discord] Sent webhook: ${res.statusCode}`);
   });
 
