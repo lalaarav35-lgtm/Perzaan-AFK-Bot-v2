@@ -1,18 +1,25 @@
 const http = require('http');
 const protocol = require('https');
 
-http.createServer((req, res) => { res.write("Bot is running!"); res.end(); }).listen(process.env.PORT || 3000);
-    // console.log(`[Discord] Sent webhook: ${res.statusCode}`);
-  });
+// Keep Render Free Tier alive
+http.createServer((req, res) => {
+  res.write("Bot is running!");
+  res.end();
+}).listen(process.env.PORT || 3000);
 
-  req.on('error', (e) => {
-    console.log(`[Discord] Error sending webhook: ${e.message}`);
-  });
+// Discord Webhook Notification
+const req = protocol.request(options, (res) => {
+  // console.log(`[Discord] Sent webhook: ${res.statusCode}`);
+});
 
+req.on('error', (e) => {
+  console.log(`[Discord] Error sending webhook: ${e.message}`);
+});
+
+if (typeof payload !== 'undefined') {
   req.write(payload);
-  req.end();
-
-// ============================================================
+}
+req.end();
 // CRASH RECOVERY - IMMORTAL MODE
 // ============================================================
 process.on('uncaughtException', (err) => {
