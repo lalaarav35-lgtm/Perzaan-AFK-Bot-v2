@@ -1,12 +1,5 @@
 const http = require('http');
 http.createServer((req, res) => { res.write("Bot is running!"); res.end(); }).listen(process.env.PORT || 3000);
-    path: urlParts.pathname + urlParts.search,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': payload.length
-    }
-  };
 
   const req = protocol.request(options, (res) => {
     // console.log(`[Discord] Sent webhook: ${res.statusCode}`);
