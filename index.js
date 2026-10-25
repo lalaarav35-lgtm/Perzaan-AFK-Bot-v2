@@ -12,7 +12,7 @@ http.createServer((req, res) => {
 // 2. Function to start the Minecraft bot
 function createBot() {
   const host = "Aarav1hgc.aternos.me";
-  const port = 25565;
+  const port = 12216;
   const username = "PerzaanAFK";
 
   console.log(`Attempting to connect to ${host}:${port} as ${username}...`);
