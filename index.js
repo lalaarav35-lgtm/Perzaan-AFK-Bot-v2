@@ -13,7 +13,7 @@ http.createServer((req, res) => {
 function createBot() {
   const host = "Aarav1hgc.aternos.me";
   const port = 12216;
-  const username = "PerzaanAFK";
+  const username = "saidey gandmara";
 
   console.log(`Attempting to connect to ${host}:${port} as ${username}...`);
 
